@@ -1,0 +1,30 @@
+{
+  "study_log": {
+    "daily_hours": [4.0, 5.0, 3.5, 6.0, 4.5, 5.0, 4.0],
+    "dates": ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05", "2024-01-06", "2024-01-07"]
+  },
+  "resume_text": "Experienced Python developer with 2 years of experience in Django, REST API design, PostgreSQL, and Docker. Familiar with Git and Agile workflows.",
+  "job_description": "Looking for a Python backend developer with strong skills in FastAPI, Docker, Kubernetes, PostgreSQL, and System Design. Experience with CI/CD and Microservices is a plus.",
+  "internship": {
+    "duration_months": 6,
+    "company_tier": 2,
+    "role_relevance": 0.85,
+    "project_count": 3
+  },
+  "performance": {
+    "subject_scores": [
+      {"subject": "Data Structures", "score": 78.0},
+      {"subject": "Algorithms", "score": 72.0},
+      {"subject": "Database Management", "score": 85.0},
+      {"subject": "Operating Systems", "score": 65.0},
+      {"subject": "Computer Networks", "score": 70.0}
+    ],
+    "backlogs": 0,
+    "project_failures": 0
+  },
+  "skill_gap": {
+    "current_skills": ["Python", "Django", "PostgreSQL", "Docker", "Git"],
+    "target_skills": ["FastAPI", "Kubernetes", "System Design", "CI/CD", "Microservices"],
+    "target_role": "Backend Engineer"
+  }
+}

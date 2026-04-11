@@ -1,0 +1,39 @@
+{
+  "consistency_score": 0.82,
+  "burnout_risk": "Low",
+  "resume_score": 0.71,
+  "missing_skills": ["FastAPI", "Kubernetes", "System Design", "CI/CD", "Microservices"],
+  "internship_score": 7.25,
+  "placement_boost": 0.725,
+  "failure_reasons": [],
+  "weak_areas": [],
+  "roadmap": [
+    {
+      "skill": "FastAPI",
+      "resources": ["https://fastapi.tiangolo.com/tutorial", "https://realpython.com/fastapi-python-web-apis"],
+      "priority": 1
+    },
+    {
+      "skill": "Kubernetes",
+      "resources": ["https://kubernetes.io/docs/tutorials", "https://www.cncf.io/certification/training"],
+      "priority": 2
+    },
+    {
+      "skill": "System Design",
+      "resources": ["https://github.com/donnemartin/system-design-primer"],
+      "priority": 3
+    },
+    {
+      "skill": "CI/CD",
+      "resources": ["https://www.google.com/search?q=CI/CD+tutorial", "https://www.youtube.com/results?search_query=CI/CD+tutorial"],
+      "priority": 4
+    },
+    {
+      "skill": "Microservices",
+      "resources": ["https://www.google.com/search?q=Microservices+tutorial", "https://www.youtube.com/results?search_query=Microservices+tutorial"],
+      "priority": 5
+    }
+  ],
+  "placement_probability": 0.74,
+  "risk_level": "Low"
+}

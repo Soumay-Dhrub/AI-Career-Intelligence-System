@@ -1,3 +1,59 @@
+# Python
 venv/
-node_modules/
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE / Editor tools
+.kiro/
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test / Coverage
+.pytest_cache/
+.hypothesis/
+htmlcov/
+.coverage
+coverage/
+frontend/coverage/
+
+# Build artifacts
+*.pyc
+*.pyo
+dist/
+build/
+*.egg-info/
+
+# Misc
+.gitkeep
