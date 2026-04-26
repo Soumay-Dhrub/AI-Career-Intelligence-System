@@ -119,3 +119,11 @@ _include("backend.routes.analyze.router")
 # Auth router — always available (no ML models needed)
 from backend.routes.auth import router as auth_router  # noqa: E402
 app.include_router(auth_router)
+
+# Placement predictor
+from backend.routes.placement import router as placement_router  # noqa: E402
+app.include_router(placement_router)
+
+# NextHire AI chat
+from backend.routes.ai_chat import router as ai_chat_router  # noqa: E402
+app.include_router(ai_chat_router)
