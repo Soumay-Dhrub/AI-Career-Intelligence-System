@@ -1,52 +1,128 @@
+# ────────────────────────────────────────────────────────────────────────────
 # Python
+# ────────────────────────────────────────────────────────────────────────────
 venv/
+env/
+ENV/
+.venv
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
+*.egg
 *.egg-info/
 dist/
 build/
 .eggs/
+*.so
+.Python
 
-# Node / Frontend
-node_modules/
-frontend/node_modules/
-frontend/dist/
-frontend/.env.local
-frontend/.env.*.local
-
-# Environment files
+# Python environment and IDE
 .env
 .env.local
 .env.*.local
-*.env
+.env.prod
 
-# IDE / Editor tools
-.kiro/
-.cursor/
-.vscode/
-.idea/
-*.swp
-*.swo
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
+# ────────────────────────────────────────────────────────────────────────────
+# Node / Frontend
+# ────────────────────────────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.npm
 
+# Frontend environment
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/.env.prod
+
+# ────────────────────────────────────────────────────────────────────────────
+# IDE / Editor Tools
+# ────────────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+*.swn
+*~
+.DS_Store
+Thumbs.db
+.project
+.settings/
+.classpath
+
+# ────────────────────────────────────────────────────────────────────────────
+# Logs and Temporary Files
+# ────────────────────────────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ────────────────────────────────────────────────────────────────────────────
 # Test / Coverage
+# ────────────────────────────────────────────────────────────────────────────
 .pytest_cache/
 .hypothesis/
 htmlcov/
 .coverage
+.coverage.*
 coverage/
-frontend/coverage/
+front-end/coverage/
+*.cover
+.tox/
+.nox/
+
+# ────────────────────────────────────────────────────────────────────────────
+# ML / Data
+# ────────────────────────────────────────────────────────────────────────────
+*.joblib
+*.pkl
+*.pickle
+*.h5
+*.pt
+*.pth
+*.onnx
+__pycache__/
+*.pyc
+
+# ────────────────────────────────────────────────────────────────────────────
+# OS-specific
+# ────────────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ────────────────────────────────────────────────────────────────────────────
+# IDE-specific configuration (local)
+# ────────────────────────────────────────────────────────────────────────────
+.vscode/launch.json
+.vscode/tasks.json
+*.sublime-project
+*.sublime-workspace
+
+# ────────────────────────────────────────────────────────────────────────────
+# Docker
+# ────────────────────────────────────────────────────────────────────────────
+.docker/
+docker-compose.override.yml
+
+# ────────────────────────────────────────────────────────────────────────────
+# Miscellaneous
+# ────────────────────────────────────────────────────────────────────────────
+.cache/
+.tmp/
+temp/
+*.bak
+.env.backup
 
 # Build artifacts
 *.pyc
