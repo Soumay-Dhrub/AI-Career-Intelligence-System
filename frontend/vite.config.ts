@@ -12,16 +12,16 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // Proxy all /analyze, /resume, /burnout, /internship, /failure, /roadmap, /health, /auth
-      // requests to the FastAPI backend during development
       '/analyze': { target: 'http://localhost:8000', changeOrigin: true },
       '/resume': { target: 'http://localhost:8000', changeOrigin: true },
       '/burnout': { target: 'http://localhost:8000', changeOrigin: true },
       '/internship': { target: 'http://localhost:8000', changeOrigin: true },
       '/failure': { target: 'http://localhost:8000', changeOrigin: true },
       '/roadmap': { target: 'http://localhost:8000', changeOrigin: true },
+      '/placement': { target: 'http://localhost:8000', changeOrigin: true },
       '/health': { target: 'http://localhost:8000', changeOrigin: true },
       '/auth': { target: 'http://localhost:8000', changeOrigin: true },
+      '/ai-chat': { target: 'http://localhost:8000', changeOrigin: true },
     },
   },
   test: {

@@ -16,6 +16,7 @@ import { InternshipPage } from '@/pages/modules/InternshipPage'
 import { FailurePage } from '@/pages/modules/FailurePage'
 import { RoadmapToolPage } from '@/pages/modules/RoadmapToolPage'
 import { PlacementPage } from '@/pages/modules/PlacementPage'
+import { FloatingChat } from '@/components/ui/FloatingChat'
 
 // PrivateRoute: redirects unauthenticated users to /login
 function PrivateRoute({ children }: { children: ReactNode }) {
@@ -69,6 +70,7 @@ function AppLayout({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
+      <FloatingChat />
     </div>
   )
 }

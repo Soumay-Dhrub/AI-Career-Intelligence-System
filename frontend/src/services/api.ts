@@ -8,10 +8,18 @@ import type {
   BurnoutResponse,
   InternshipPayload,
   InternshipResponse,
+  StudentProfile,
+  ProfileAnalysisResponse,
   PerformanceData,
   FailureResponse,
+  StudentAssessment,
+  FailureIntelligenceResponse,
   SkillGap,
   RoadmapResponse,
+  RoadmapInput,
+  IntelligentRoadmapResponse,
+  PlacementAnalysisRequest,
+  PlacementPrediction,
   LoginRequest,
   LoginResponse,
   SignupRequest,
@@ -73,11 +81,29 @@ export const api = {
   internshipAnalysis: (payload: InternshipPayload) =>
     axiosInstance.post<InternshipResponse>('/internship', payload),
 
+  internshipAnalyzeProfile: (payload: StudentProfile) =>
+    axiosInstance.post<ProfileAnalysisResponse>('/internship/analyze', payload),
+
   failureAnalysis: (payload: PerformanceData) =>
     axiosInstance.post<FailureResponse>('/failure', payload),
 
+  failureIntelligence: (payload: StudentAssessment) =>
+    axiosInstance.post<FailureIntelligenceResponse>('/failure/analyze', payload),
+
   roadmapGeneration: (payload: SkillGap) =>
     axiosInstance.post<RoadmapResponse>('/roadmap', payload),
+
+  roadmapGenerate: (payload: RoadmapInput) =>
+    axiosInstance.post<IntelligentRoadmapResponse>('/roadmap/generate', payload),
+
+  roadmapSaved: () =>
+    axiosInstance.get<{ roadmap: IntelligentRoadmapResponse | null }>('/roadmap/saved'),
+
+  placementPredict: (payload: PlacementAnalysisRequest) =>
+    axiosInstance.post<PlacementPrediction>('/placement/predict', payload),
+
+  placementHistory: () =>
+    axiosInstance.get<{ reports: { score: number; level: string; created_at: string }[] }>('/placement/history'),
 
   healthCheck: () => axiosInstance.get('/health'),
 }

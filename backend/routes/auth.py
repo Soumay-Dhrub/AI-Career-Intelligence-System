@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # ── Security config ───────────────────────────────────────────────────────────
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "placement-readiness-secret-key-change-in-prod")
+SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("SECRET_KEY", "placement-readiness-secret-key-change-in-prod")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
@@ -74,12 +74,24 @@ def _create_token(data: dict[str, Any]) -> str:
 
 async def _verify_google_token(credential: str) -> dict[str, str]:
     """Verify a Google ID token and return the user info payload."""
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(
-            "https://oauth2.googleapis.com/tokeninfo",
-            params={"id_token": credential},
-            timeout=10.0,
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(
+                "https://oauth2.googleapis.com/tokeninfo",
+                params={"id_token": credential},
+            )
+    except httpx.TimeoutException:
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="Google token verification timed out. Please try again.",
         )
+    except httpx.RequestError as exc:
+        logger.error("Google tokeninfo request failed", extra={"error": str(exc)})
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Could not reach Google servers. Please try again.",
+        )
+
     if resp.status_code != 200:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -87,8 +99,12 @@ async def _verify_google_token(credential: str) -> dict[str, str]:
         )
     data = resp.json()
 
-    # Verify audience if GOOGLE_CLIENT_ID is configured
-    if GOOGLE_CLIENT_ID and data.get("aud") != GOOGLE_CLIENT_ID:
+    # Verify audience — trimmed comparison to handle whitespace in env var
+    if GOOGLE_CLIENT_ID and data.get("aud", "").strip() != GOOGLE_CLIENT_ID.strip():
+        logger.warning(
+            "Google token audience mismatch",
+            extra={"token_aud": data.get("aud"), "expected": GOOGLE_CLIENT_ID},
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Google token audience mismatch.",
