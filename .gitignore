@@ -133,3 +133,4 @@ build/
 
 # Misc
 .gitkeep
+datasets/*.zip
