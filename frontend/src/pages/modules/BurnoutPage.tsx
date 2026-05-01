@@ -4,6 +4,7 @@ import { Brain, Loader2, Clock, Moon, Coffee, BookOpen, Zap, ChevronDown, Chevro
 import { api } from '@/services/api'
 import { useToast } from '@/contexts/ToastContext'
 import { useNotify } from '@/hooks/useNotify'
+import { GuidanceHint } from '@/components/guidance/GuidanceHint'
 import { cn } from '@/lib/utils'
 import type { BurnoutResponse, DailyScheduleInput } from '@/types/api'
 
@@ -152,6 +153,11 @@ export function BurnoutPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Intelligent analysis of your study patterns and wellbeing</p>
         </div>
       </div>
+
+      <GuidanceHint
+        title="Understand your burnout risk"
+        description="Use guided help to interpret your study patterns, balance daily hours, and improve long-term consistency."
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* ── Input Panel ── */}

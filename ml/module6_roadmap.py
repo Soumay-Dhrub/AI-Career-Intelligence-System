@@ -1,4 +1,4 @@
-"""Roadmap generation — lightweight collaborative-filtering proxy using Ridge regression."""
+"""Roadmap generation — training a stronger skill priority regressor."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -6,8 +6,9 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 
 DATASETS_DIR = Path(__file__).parent.parent / "datasets"
@@ -23,17 +24,31 @@ def train(df: pd.DataFrame) -> None:
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    model = Ridge(alpha=1.0)
-    model.fit(X_train, y_train)
+    candidates = {
+        "Ridge": Ridge(alpha=1.0),
+        "RandomForest": RandomForestRegressor(
+            n_estimators=200,
+            max_depth=8,
+            random_state=42,
+            n_jobs=-1,
+        ),
+    }
 
-    preds = model.predict(X_test)
-    mae = mean_absolute_error(y_test, preds)
-    print(f"  [roadmap] Ridge: MAE={mae:.4f}")
+    best_name, best_model, best_mae = None, None, np.inf
+    for name, model in candidates.items():
+        model.fit(X_train, y_train)
+        preds = model.predict(X_test)
+        mae = mean_absolute_error(y_test, preds)
+        r2 = r2_score(y_test, preds)
+        print(f"  [roadmap] {name}: MAE={mae:.4f}, R²={r2:.4f}")
 
-    # The service calls model.predict([[i] for i in range(len(skills))])
-    # and sorts by score — Ridge returns a float per skill index, which is correct.
+        if mae < best_mae:
+            best_mae, best_name, best_model = mae, name, model
+
+    print(f"  [roadmap] Best model: {best_name} (MAE={best_mae:.4f})")
+
     out_path = MODEL_DIR / "cf_model.joblib"
-    joblib.dump(model, out_path)
+    joblib.dump(best_model, out_path)
     print(f"  [roadmap] Saved → {out_path}")
 
 

@@ -8,6 +8,7 @@ import {
 import { api } from '@/services/api'
 import { useToast } from '@/contexts/ToastContext'
 import { useNotify } from '@/hooks/useNotify'
+import { GuidanceHint } from '@/components/guidance/GuidanceHint'
 import { cn } from '@/lib/utils'
 import type {
   PlacementPrediction, PlacementAnalysisRequest,
@@ -209,6 +210,11 @@ export function PlacementPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Multi-module AI analysis — your real placement readiness score</p>
         </div>
       </div>
+
+      <GuidanceHint
+        title="Understand your placement readiness"
+        description="Open the help panel for best practices and follow the guided tour to interpret your readiness score."
+      />
 
       {!result && <StepIndicator current={step} total={STEPS.length} />}
 

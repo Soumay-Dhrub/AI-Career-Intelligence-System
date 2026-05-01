@@ -6,7 +6,7 @@ import {
   Brain, FileText, Briefcase, AlertTriangle, Navigation, Target,
   TrendingUp, TrendingDown, CheckCircle2, AlertCircle,
   Flame, Calendar, BarChart2, Lightbulb, ChevronRight,
-  Download, Clock, Star,
+  Download, Clock, Star, HelpCircle,
 } from 'lucide-react'
 import { useAnalysisStore } from '@/stores/analysisStore'
 import { Skeleton } from '@/components/ui/Skeleton'
@@ -14,6 +14,7 @@ import { ConsistencyLineChart } from '@/components/charts/ConsistencyLineChart'
 import { SkillGapBarChart } from '@/components/charts/SkillGapBarChart'
 import { AnalyzeModal } from '@/components/forms/AnalyzeModal'
 import { useAuthStore } from '@/stores/authStore'
+import { useOnboardingStore } from '@/stores/onboardingStore'
 import { cn, formatPercent, getRiskBgColor } from '@/lib/utils'
 import { DEMO_REPORT } from '@/lib/demoData'
 import type { PlacementReport } from '@/types/api'
@@ -352,6 +353,9 @@ export function DashboardPage() {
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+  const onboardingComplete = useOnboardingStore((s) => s.complete)
+  const openTour = useOnboardingStore((s) => s.openTour)
+  const openHelp = useOnboardingStore((s) => s.openHelp)
 
   // Smart insights derived from report
   const insights = [
@@ -388,6 +392,26 @@ export function DashboardPage() {
           </button>
         </div>
       </div>
+
+      {!onboardingComplete && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}
+          className="mb-5 rounded-3xl border border-blue-200/80 bg-blue-50 dark:bg-blue-950/90 dark:border-blue-900/80 p-5 flex flex-col md:flex-row items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">New to PlaceReady?</p>
+            <p className="text-sm text-slate-700 dark:text-slate-300 mt-1">Follow the guided onboarding tour to learn how each module drives your placement readiness.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button onClick={openTour}
+              className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition">
+              <Sparkles size={16} /> Start tour
+            </button>
+            <button onClick={openHelp}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+              <HelpCircle size={16} /> Open help
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       {/* ── Pipeline loading overlay ── */}
       <AnimatePresence>

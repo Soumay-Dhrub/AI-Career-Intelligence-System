@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate, Link } from 'react-router-dom'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Eye, EyeOff, ArrowRight, Mail, Lock, Chrome } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useAuthStore } from '@/stores/authStore'
 import { useToast } from '@/contexts/ToastContext'
 import { cn } from '@/lib/utils'
@@ -21,23 +22,33 @@ export function LoginForm() {
   const login = useAuthStore((s) => s.login)
   const googleLogin = useAuthStore((s) => s.googleLogin)
   const toast = useToast()
+  const [showPassword, setShowPassword] = useState(false)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
+    watch,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { remember: false },
   })
 
+  const emailValue = watch('email')
+  const passwordValue = watch('password')
+
   async function onSubmit(values: LoginFormValues) {
+    setIsSubmitting(true)
     try {
       await login({ email: values.email, password: values.password }, values.remember ?? false)
       navigate('/dashboard')
     } catch (err: unknown) {
       const message = (err as { message?: string }).message ?? 'Login failed. Please try again.'
       toast.error(message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -52,113 +63,364 @@ export function LoginForm() {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Google Sign-In */}
-      <button
+    <div className="space-y-6">
+      {/* ── PREMIUM GOOGLE SIGN-IN BUTTON ── */}
+      <motion.button
         type="button"
         onClick={handleGoogleSignIn}
         disabled={isSubmitting}
+        whileHover={{
+          scale: 1.02,
+          y: -3,
+          transition: { duration: 0.2, ease: 'easeOut' }
+        }}
+        whileTap={{ scale: 0.98 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
         className={cn(
-          'w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl text-sm font-medium',
-          'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800',
-          'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700',
-          'transition-colors duration-150',
-          'disabled:opacity-60 disabled:cursor-not-allowed'
+          'w-full relative group overflow-hidden',
+          'bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-white/30',
+          'rounded-2xl py-4 px-6 text-white font-semibold text-base',
+          'shadow-lg shadow-slate-950/20 hover:shadow-xl hover:shadow-slate-950/30',
+          'backdrop-blur-sm transition-all duration-300',
+          'disabled:opacity-60 disabled:cursor-not-allowed',
+          'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400'
         )}
       >
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
-          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-          <path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
-          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/>
-        </svg>
-        Continue with Google
-      </button>
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:via-blue-500/5 group-hover:to-blue-500/10 transition-all duration-500" />
 
-      {/* Divider */}
-      <div className="relative flex items-center gap-3">
-        <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
-        <span className="text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">
-          or sign in with email
-        </span>
-        <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
-      </div>
+        {/* Shine effect */}
+        <div className="absolute inset-0 -left-full group-hover:left-full bg-white/10 w-full h-full transition-all duration-700 ease-out" />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        {/* Email */}
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-            Email
+        <div className="relative z-10 flex items-center justify-center gap-4">
+          <div className="w-6 h-6 flex items-center justify-center">
+            <Chrome size={20} className="text-white" />
+          </div>
+          <span className="font-semibold">Continue with Google</span>
+        </div>
+
+        {/* Hover glow effect */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+      </motion.button>
+
+      {/* ── PREMIUM DIVIDER ── */}
+      <motion.div
+        initial={{ opacity: 0, scaleX: 0 }}
+        animate={{ opacity: 1, scaleX: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="relative flex items-center gap-4 py-2"
+      >
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent" />
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-sm font-medium text-indigo-300/70 bg-slate-900/80 px-4 py-1 rounded-full border border-indigo-400/20 backdrop-blur-sm"
+        >
+          or continue with email
+        </motion.span>
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent" />
+      </motion.div>
+
+      {/* ── ENHANCED FORM ── */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+        {/* ── EMAIL FIELD ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-2"
+        >
+          <label className="block text-sm font-bold text-indigo-200/90 tracking-wide uppercase">
+            Email Address
           </label>
-          <input
-            type="email"
-            autoComplete="email"
-            {...register('email')}
-            className={cn(
-              'input-field',
-              errors.email && 'border-red-400 dark:border-red-600 focus:ring-red-500/30 focus:border-red-500'
+          <div className="relative group">
+            {/* Animated background glow */}
+            <div className={cn(
+              'absolute inset-0 rounded-2xl opacity-0 transition-all duration-300',
+              'bg-gradient-to-r from-indigo-500/20 via-blue-500/15 to-purple-500/20',
+              focusedField === 'email' && 'opacity-100',
+              errors.email && 'from-red-500/20 via-red-500/15 to-red-500/20'
+            )} />
+
+            {/* Input field */}
+            <div className="relative">
+              <input
+                type="email"
+                autoComplete="email"
+                {...register('email', {
+                  onFocus: () => setFocusedField('email'),
+                  onBlur: () => setFocusedField(null),
+                })}
+                aria-invalid={errors.email ? 'true' : 'false'}
+                aria-describedby={errors.email ? 'email-error' : undefined}
+                className={cn(
+                  'w-full relative z-10 bg-white/5 border-2 rounded-2xl px-5 py-4 pr-12',
+                  'text-white placeholder-indigo-300/50 font-medium',
+                  'backdrop-blur-sm transition-all duration-300',
+                  'focus:outline-none focus:ring-2 focus:ring-offset-0',
+                  'border-white/20 focus:border-indigo-400',
+                  errors.email && 'border-red-400/60 focus:border-red-400 focus:ring-red-500/30',
+                  focusedField === 'email' && 'shadow-2xl shadow-indigo-500/20',
+                  'hover:border-white/30'
+                )}
+                placeholder="you@company.com"
+              />
+
+              {/* Email icon */}
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
+                <Mail size={18} className={cn(
+                  'transition-colors duration-300',
+                  focusedField === 'email' ? 'text-indigo-300' : 'text-indigo-400/60',
+                  errors.email && 'text-red-400'
+                )} />
+              </div>
+
+              {/* Focus ring animation */}
+              <motion.div
+                animate={focusedField === 'email' ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 rounded-2xl border-2 border-indigo-400/50 pointer-events-none"
+              />
+            </div>
+          </div>
+
+          {/* Error message */}
+          <AnimatePresence>
+            {errors.email && (
+              <motion.p
+                id="email-error"
+                initial={{ opacity: 0, y: -10, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                exit={{ opacity: 0, y: -10, height: 0 }}
+                className="text-sm font-medium text-red-400 flex items-center gap-2"
+              >
+                <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+                {errors.email.message}
+              </motion.p>
             )}
-            placeholder="you@example.com"
-          />
-          {errors.email && (
-            <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>
-          )}
-        </div>
+          </AnimatePresence>
+        </motion.div>
 
-        {/* Password */}
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-            Password
-          </label>
-          <input
-            type="password"
-            autoComplete="current-password"
-            {...register('password')}
-            className={cn(
-              'input-field',
-              errors.password && 'border-red-400 dark:border-red-600 focus:ring-red-500/30 focus:border-red-500'
+        {/* ── PASSWORD FIELD ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="space-y-2"
+        >
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-bold text-indigo-200/90 tracking-wide uppercase">
+              Password
+            </label>
+            <Link
+              to="#"
+              className="text-sm font-semibold text-indigo-300 hover:text-white transition-colors duration-200 hover:underline underline-offset-2"
+            >
+              Forgot?
+            </Link>
+          </div>
+          <div className="relative group">
+            {/* Animated background glow */}
+            <div className={cn(
+              'absolute inset-0 rounded-2xl opacity-0 transition-all duration-300',
+              'bg-gradient-to-r from-indigo-500/20 via-blue-500/15 to-purple-500/20',
+              focusedField === 'password' && 'opacity-100',
+              errors.password && 'from-red-500/20 via-red-500/15 to-red-500/20'
+            )} />
+
+            {/* Input field */}
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                {...register('password', {
+                  onFocus: () => setFocusedField('password'),
+                  onBlur: () => setFocusedField(null),
+                })}
+                aria-invalid={errors.password ? 'true' : 'false'}
+                aria-describedby={errors.password ? 'password-error' : undefined}
+                className={cn(
+                  'w-full relative z-10 bg-white/5 border-2 rounded-2xl px-5 py-4 pr-12',
+                  'text-white placeholder-indigo-300/50 font-medium',
+                  'backdrop-blur-sm transition-all duration-300',
+                  'focus:outline-none focus:ring-2 focus:ring-offset-0',
+                  'border-white/20 focus:border-indigo-400',
+                  errors.password && 'border-red-400/60 focus:border-red-400 focus:ring-red-500/30',
+                  focusedField === 'password' && 'shadow-2xl shadow-indigo-500/20',
+                  'hover:border-white/30'
+                )}
+                placeholder="••••••••"
+              />
+
+              {/* Password toggle */}
+              <motion.button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-1 rounded-lg hover:bg-white/10 transition-colors duration-200"
+              >
+                <AnimatePresence mode="wait">
+                  {showPassword ? (
+                    <motion.div
+                      key="hide"
+                      initial={{ opacity: 0, rotate: -90 }}
+                      animate={{ opacity: 1, rotate: 0 }}
+                      exit={{ opacity: 0, rotate: 90 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <EyeOff size={18} className={cn(
+                        'transition-colors duration-300',
+                        focusedField === 'password' ? 'text-indigo-300' : 'text-indigo-400/60',
+                        errors.password && 'text-red-400'
+                      )} />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="show"
+                      initial={{ opacity: 0, rotate: 90 }}
+                      animate={{ opacity: 1, rotate: 0 }}
+                      exit={{ opacity: 0, rotate: -90 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Eye size={18} className={cn(
+                        'transition-colors duration-300',
+                        focusedField === 'password' ? 'text-indigo-300' : 'text-indigo-400/60',
+                        errors.password && 'text-red-400'
+                      )} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+
+              {/* Focus ring animation */}
+              <motion.div
+                animate={focusedField === 'password' ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 rounded-2xl border-2 border-indigo-400/50 pointer-events-none"
+              />
+            </div>
+          </div>
+
+          {/* Error message */}
+          <AnimatePresence>
+            {errors.password && (
+              <motion.p
+                id="password-error"
+                initial={{ opacity: 0, y: -10, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                exit={{ opacity: 0, y: -10, height: 0 }}
+                className="text-sm font-medium text-red-400 flex items-center gap-2"
+              >
+                <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+                {errors.password.message}
+              </motion.p>
             )}
-            placeholder="••••••••"
-          />
-          {errors.password && (
-            <p className="mt-1.5 text-xs text-red-500">{errors.password.message}</p>
-          )}
-        </div>
+          </AnimatePresence>
+        </motion.div>
 
-        {/* Remember me */}
-        <div className="flex items-center gap-2">
-          <input
-            id="remember"
-            type="checkbox"
-            {...register('remember')}
-            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="remember" className="text-sm text-slate-600 dark:text-slate-400">
-            Remember me
+        {/* ── REMEMBER ME ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex items-center gap-3 pt-2"
+        >
+          <div className="relative">
+            <input
+              id="remember"
+              type="checkbox"
+              {...register('remember')}
+              className="w-5 h-5 rounded-lg border-2 border-indigo-400/40 bg-white/5 text-indigo-400 focus:ring-2 focus:ring-indigo-500/30 focus:ring-offset-0 backdrop-blur-sm cursor-pointer transition-all hover:border-indigo-300/60"
+            />
+          </div>
+          <label htmlFor="remember" className="text-sm font-medium text-indigo-200/80 cursor-pointer hover:text-indigo-100 transition-colors">
+            Remember me for 30 days
           </label>
-        </div>
+        </motion.div>
 
-        {/* Submit */}
-        <button
+        {/* ── PREMIUM SUBMIT BUTTON ── */}
+        <motion.button
           type="submit"
           disabled={isSubmitting}
+          whileHover={{
+            scale: 1.02,
+            y: -2,
+            transition: { duration: 0.2, ease: 'easeOut' }
+          }}
+          whileTap={{ scale: 0.98 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
           className={cn(
-            'w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold',
-            'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white',
-            'btn-glow transition-all duration-250',
-            'disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none'
+            'w-full relative group overflow-hidden',
+            'bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700',
+            'hover:from-indigo-500 hover:via-blue-500 hover:to-indigo-600',
+            'rounded-2xl py-4 px-6 text-white font-bold text-base',
+            'shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-400/40',
+            'transition-all duration-300',
+            'disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none',
+            'focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:ring-offset-0',
+            'border border-indigo-400/30'
           )}
         >
-          {isSubmitting && <Loader2 size={16} className="animate-spin" />}
-          {isSubmitting ? 'Signing in…' : 'Sign in'}
-        </button>
+          {/* Animated background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-400/0 via-blue-400/0 to-purple-400/0 group-hover:from-indigo-400/20 group-hover:via-blue-400/20 group-hover:to-purple-400/20 transition-all duration-500" />
 
-        <p className="text-center text-sm text-slate-500 dark:text-slate-400">
+          {/* Shine effect */}
+          <div className="absolute inset-0 -left-full group-hover:left-full bg-white/20 w-full h-full transition-all duration-700 ease-out" />
+
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+
+          <div className="relative z-10 flex items-center justify-center gap-3">
+            <AnimatePresence mode="wait">
+              {isSubmitting ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center gap-3"
+                >
+                  <Loader2 size={18} className="animate-spin" />
+                  <span>Signing in…</span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="signin"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center gap-3"
+                >
+                  <span>Sign in to PlaceReady</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.button>
+
+        {/* ── SIGN UP LINK ── */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-center text-sm text-indigo-300/70 pt-2"
+        >
           Don't have an account?{' '}
-          <Link to="/signup" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-            Sign up
+          <Link
+            to="/signup"
+            className="font-bold text-indigo-300 hover:text-white transition-colors duration-200 hover:underline underline-offset-2"
+          >
+            Create one now
           </Link>
-        </p>
+        </motion.p>
       </form>
     </div>
   )

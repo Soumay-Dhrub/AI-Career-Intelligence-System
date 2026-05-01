@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Menu, Sun, Moon, ChevronDown, LogOut, User, Sparkles, Edit } from 'lucide-react'
+import { Menu, Sun, Moon, ChevronDown, LogOut, User, Sparkles, Edit, HelpCircle } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useProfileStore } from '@/stores/profileStore'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useOnboardingStore } from '@/stores/onboardingStore'
 import { NotificationBell } from '@/components/ui/NotificationBell'
 import { cn } from '@/lib/utils'
 
@@ -34,6 +35,8 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
   const profileImage = useProfileStore((s) => s.profile.profile_image_url)
   const fetchProfile = useProfileStore((s) => s.fetchProfile)
   const profileLoaded = useProfileStore((s) => !!s.profile.email || !!s.profile.name)
+  const openHelp = useOnboardingStore((s) => s.openHelp)
+  const openTour = useOnboardingStore((s) => s.openTour)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -99,6 +102,15 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
         {/* Notification bell */}
         <NotificationBell />
 
+        {/* Guidance help */}
+        <button
+          onClick={openHelp}
+          className="p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition-all duration-200"
+          aria-label="Open help"
+        >
+          <HelpCircle size={18} />
+        </button>
+
         {/* Theme toggle */}
         <button
           onClick={toggleTheme}
@@ -160,6 +172,12 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   <User size={15} /> View Profile
+                </button>
+                <button
+                  onClick={() => { openTour(); setDropdownOpen(false) }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                  <Sparkles size={15} /> Start Tour
                 </button>
                 <button
                   onClick={() => { navigate('/profile'); setDropdownOpen(false) }}
