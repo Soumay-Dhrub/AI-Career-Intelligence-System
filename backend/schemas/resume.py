@@ -1,6 +1,5 @@
-"""Pydantic schemas for the resume endpoint."""
-from typing import List
-
+"""Pydantic schemas for the enhanced resume/ATS endpoint."""
+from typing import Dict, List, Optional
 from pydantic import BaseModel, field_validator
 
 
@@ -16,7 +15,24 @@ class ResumeRequest(BaseModel):
         return v
 
 
+class ImprovementSuggestion(BaseModel):
+    category: str
+    original: Optional[str] = None
+    suggestion: str
+    reason: str
+
+
 class ResumeResponse(BaseModel):
-    resume_score: float        # 0.0 – 1.0
-    keyword_match: float       # 0.0 – 100.0 (percentage)
+    ats_score: float
+    resume_score: float
+    keyword_match: float
+    skill_match_pct: float
+    matched_skills: List[str]
     missing_skills: List[str]
+    weak_keywords: List[str]
+    suggestions: List[ImprovementSuggestion]
+    role_specific_tips: List[str]
+    template_recommendation: str
+    template_reason: str
+    summary: str
+    section_breakdown: Optional[Dict[str, float]] = None

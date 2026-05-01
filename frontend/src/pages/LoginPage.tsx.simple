@@ -1,0 +1,87 @@
+import React from 'react'
+import { LoginForm } from '@/components/forms/LoginForm'
+import { Sparkles } from 'lucide-react'
+
+export function LoginPage() {
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', width: '100%', backgroundColor: '#ffffff' }}>
+      {/* Left panel - desktop only */}
+      <div
+        style={{
+          display: 'none',
+          flex: 1,
+          overflow: 'hidden',
+          background: 'linear-gradient(to bottom right, #2563eb, #1e3a8a)',
+          '@media (min-width: 1024px)': {
+            display: 'flex'
+          }
+        }}
+        className="lg:flex"
+      >
+        {/* Left side content will be hidden on mobile */}
+        <div style={{ color: 'white', padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', zIndex: 10, position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <Sparkles size={20} color="#87ceeb" />
+            </div>
+            <div>
+              <p style={{ fontSize: '18px', fontWeight: 'bold' }}>PlaceReady</p>
+              <p style={{ fontSize: '12px', color: '#add8e6' }}>AI Placement System</p>
+            </div>
+          </div>
+          <div>
+            <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '24px' }}>
+              Land Your Dream <span style={{ color: '#add8e6' }}>Placement</span> with AI Insights
+            </h1>
+            <p style={{ color: '#e6f2ff', marginBottom: '32px' }}>Get personalized analysis across 6 AI modules</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right panel - main form */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', backgroundColor: '#f9fafb', position: 'relative', minHeight: '100vh' }}>
+        {/* Decorative elements */}
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '384px', height: '384px', background: 'radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 100%)', borderRadius: '50%', filter: 'blur(48px)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, width: '256px', height: '256px', background: 'radial-gradient(circle, rgba(14, 165, 233, 0.05) 0%, transparent 100%)', borderRadius: '50%', filter: 'blur(48px)', zIndex: 1 }} />
+
+        {/* Form container */}
+        <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '448px' }}>
+          {/* Mobile logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px' }} className="lg:hidden">
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sparkles size={16} color="white" />
+            </div>
+            <p style={{ fontSize: '18px', fontWeight: 'bold', background: 'linear-gradient(135deg, #2563eb, #0ea5e9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>PlaceReady</p>
+          </div>
+
+          {/* Card */}
+          <div style={{ backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+            {/* Blue top accent */}
+            <div style={{ height: '4px', background: 'linear-gradient(to right, #2563eb, #0ea5e9, #06b6d4)' }} />
+
+            {/* Card header */}
+            <div style={{ padding: '28px 32px 20px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827' }}>Welcome back 👋</h2>
+              <p style={{ color: '#6b7280', fontSize: '14px', marginTop: '4px' }}>Sign in to your PlaceReady account</p>
+            </div>
+
+            {/* Divider */}
+            <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, #e5e7eb, transparent)', margin: '0 32px' }} />
+
+            {/* Form */}
+            <div style={{ padding: '24px 32px' }}>
+              <LoginForm />
+            </div>
+          </div>
+
+          {/* Footer text */}
+          <p style={{ textAlign: 'center', fontSize: '12px', color: '#9ca3af', marginTop: '20px' }}>
+            By signing in, you agree to our{' '}
+            <span style={{ color: '#2563eb', cursor: 'pointer' }}>Terms</span> and{' '}
+            <span style={{ color: '#2563eb', cursor: 'pointer' }}>Privacy Policy</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}

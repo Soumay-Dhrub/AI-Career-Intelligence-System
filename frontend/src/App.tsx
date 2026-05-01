@@ -2,8 +2,11 @@ import React, { useState, useEffect, type ReactNode } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAuthStore } from '@/stores/authStore'
+import { useOnboardingStore } from '@/stores/onboardingStore'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Navbar } from '@/components/layout/Navbar'
+import { GuidancePanel } from '@/components/guidance/GuidancePanel'
+import { OnboardingTour } from '@/components/guidance/OnboardingTour'
 import { LoginPage } from '@/pages/LoginPage'
 import { SignupPage } from '@/pages/SignupPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -16,6 +19,7 @@ import { InternshipPage } from '@/pages/modules/InternshipPage'
 import { FailurePage } from '@/pages/modules/FailurePage'
 import { RoadmapToolPage } from '@/pages/modules/RoadmapToolPage'
 import { PlacementPage } from '@/pages/modules/PlacementPage'
+import { FloatingChat } from '@/components/ui/FloatingChat'
 
 // PrivateRoute: redirects unauthenticated users to /login
 function PrivateRoute({ children }: { children: ReactNode }) {
@@ -47,6 +51,8 @@ function PageTransition({ children }: { children: ReactNode }) {
 // Layout shell wrapping protected pages
 function AppLayout({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const loadOnboardingState = useOnboardingStore((s) => s.loadState)
 
   // Collapse sidebar on mobile by default
   useEffect(() => {
@@ -56,6 +62,10 @@ function AppLayout({ children }: { children: ReactNode }) {
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
   }, [])
+
+  useEffect(() => {
+    if (isAuthenticated) loadOnboardingState()
+  }, [isAuthenticated, loadOnboardingState])
 
   const sidebarWidth = collapsed ? 64 : 256
 
@@ -69,6 +79,9 @@ function AppLayout({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
+      <FloatingChat />
+      <GuidancePanel />
+      <OnboardingTour />
     </div>
   )
 }

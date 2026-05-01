@@ -1,183 +1,173 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { LoginCard } from '@/components/ui/LoginCard'
 import { LoginForm } from '@/components/forms/LoginForm'
-import { Sparkles, TrendingUp, Shield, Zap } from 'lucide-react'
+import { FeatureItem } from '@/components/ui/FeatureItem'
+import { Sparkles, TrendingUp, Shield, Zap, BookOpen, ClipboardCheck, Cpu, Star } from 'lucide-react'
 
 const STATS = [
   { value: '94%', label: 'Placement Rate' },
-  { value: '10K+', label: 'Students' },
+  { value: '10K+', label: 'Active Students' },
   { value: '6', label: 'AI Modules' },
 ]
 
 const FEATURES = [
-  { icon: <TrendingUp size={15} />, text: 'Real-time placement probability' },
-  { icon: <Shield size={15} />, text: 'Burnout risk detection' },
-  { icon: <Zap size={15} />, text: 'Personalized AI roadmap' },
+  { icon: TrendingUp, title: 'Real-time placement probability' },
+  { icon: Shield, title: 'Burnout risk detection' },
+  { icon: Zap, title: 'Personalized AI roadmap' },
+  { icon: BookOpen, title: 'Resume strength score' },
+  { icon: ClipboardCheck, title: 'Interview readiness checklist' },
+  { icon: Cpu, title: 'Role-match skill insights' },
+]
+
+const COMPANY_LOGOS = [
+  { name: 'Google' },
+  { name: 'Amazon' },
+  { name: 'Meta' },
+  { name: 'Microsoft' },
 ]
 
 export function LoginPage() {
+
   return (
-    <div className="min-h-screen flex">
-      {/* ── Left hero panel ── */}
-      <div className="hidden lg:flex flex-1 relative overflow-hidden">
-        {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=80')` }}
-        />
-        {/* Deep blue gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-sky-900 opacity-90" />
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-grid opacity-20" />
+    <div className="min-h-screen flex flex-col lg:flex-row overflow-hidden bg-slate-950 text-slate-100">
+      <div className="relative flex-1 hidden lg:flex items-center justify-center overflow-hidden bg-slate-950 border-r border-slate-800/70">
+        <div className="absolute inset-0 mesh-bg opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950/90 to-slate-900/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.14),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.12),_transparent_24%)]" />
 
-        {/* Animated orbs */}
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/15 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-20 right-10 w-56 h-56 bg-sky-400/15 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
-
-        {/* Content */}
-        <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-              <Sparkles size={20} className="text-blue-300" />
-            </div>
-            <div>
-              <p className="font-black text-lg leading-tight">PlaceReady</p>
-              <p className="text-xs text-blue-300">AI Placement System</p>
-            </div>
-          </div>
-
-          {/* Main copy */}
-          <div className="max-w-md">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-medium mb-6">
-                <Sparkles size={12} />
-                AI-Powered Career Intelligence
+        <motion.div
+          initial={{ opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.85, ease: 'easeOut' }}
+          className="relative z-10 max-w-2xl px-12 py-20"
+        >
+          <div className="mb-8 flex flex-col gap-6 text-slate-100">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-slate-900/70 border border-slate-700/60 shadow-[0_20px_70px_rgba(15,23,42,0.35)] backdrop-blur-xl">
+                <Sparkles size={22} className="text-sky-300" />
               </div>
-              <h1 className="text-4xl font-black leading-tight mb-4">
-                Land Your Dream
-                <span className="block gradient-text">Placement</span>
-                with AI Insights
-              </h1>
-              <p className="text-blue-200 text-base leading-relaxed mb-8">
-                Get personalized analysis across 6 AI modules — from resume scoring to burnout detection — all in one intelligent dashboard.
-              </p>
-
-              {/* Features */}
-              <div className="space-y-3 mb-10">
-                {FEATURES.map((f, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + i * 0.1 }}
-                    className="flex items-center gap-3 text-sm text-blue-100"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-blue-500/25 border border-blue-400/20 flex items-center justify-center text-blue-300 shrink-0">
-                      {f.icon}
-                    </div>
-                    {f.text}
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Stats row */}
-              <div className="flex items-center gap-0">
-                {STATS.map((s, i) => (
-                  <React.Fragment key={i}>
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 + i * 0.1 }}
-                      className="text-center px-6 first:pl-0"
-                    >
-                      <p className="text-2xl font-black text-white">{s.value}</p>
-                      <p className="text-xs text-blue-300 mt-0.5">{s.label}</p>
-                    </motion.div>
-                    {i < STATS.length - 1 && (
-                      <div className="w-px h-8 bg-white/15" />
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Bottom testimonial glass card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="glass rounded-2xl p-4 max-w-sm"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-                alt="Student"
-                className="w-9 h-9 rounded-full object-cover border-2 border-white/20"
-              />
               <div>
-                <p className="text-xs font-semibold text-white">Rahul Sharma</p>
-                <p className="text-xs text-blue-300">Placed at Google</p>
-              </div>
-              <div className="ml-auto flex gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xs">★</span>
-                ))}
+                <p className="text-xs uppercase tracking-[0.35em] text-sky-300/80">AI Placement Intelligence</p>
+                <p className="text-base font-semibold text-slate-200">Built for ambitious students and career teams.</p>
               </div>
             </div>
-            <p className="text-xs text-blue-200 leading-relaxed">
-              "PlaceReady's AI roadmap helped me identify exactly what skills I was missing. Got placed in 3 months!"
+
+            <h1 className="text-5xl xl:text-6xl font-black leading-tight tracking-[-0.05em] text-white">
+              Land your dream
+              <span className="block bg-gradient-to-r from-sky-300 via-cyan-300 to-blue-200 bg-clip-text text-transparent">
+                Placement
+              </span>
+              with confidence.
+            </h1>
+
+            <p className="max-w-xl text-base leading-8 text-slate-300/95">
+              Transform your application strategy with AI-powered resume scoring, interview readiness, and skill gap analysis tailored to top-tier placement outcomes.
             </p>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.15 }}
+            className="grid gap-4 sm:grid-cols-2"
+          >
+            {FEATURES.slice(0, 4).map((feature, index) => (
+              <FeatureItem key={index} icon={feature.icon} title={feature.title} />
+            ))}
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.2 }}
+            className="mt-10 grid grid-cols-3 gap-4"
+          >
+            {STATS.map((stat, index) => (
+              <div key={index} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl text-center">
+                <p className="stat-number text-4xl font-black text-white">{stat.value}</p>
+                <p className="mt-3 text-xs uppercase tracking-[0.24em] text-slate-400">{stat.label}</p>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.3 }}
+            className="mt-10 grid gap-4"
+          >
+            <div className="rounded-[2rem] border border-white/10 bg-slate-950/70 p-6 backdrop-blur-xl shadow-[0_28px_60px_rgba(15,23,42,0.35)]">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-300/80">Student success story</p>
+                  <p className="mt-3 text-lg font-black text-white">“PlaceReady helped me focus on the right skills and land an offer in record time.”</p>
+                </div>
+                <div className="rounded-3xl bg-slate-900/80 p-3 text-sky-300 shadow-inner shadow-slate-950/30">
+                  <Star size={18} className="text-sky-300" />
+                </div>
+              </div>
+              <p className="mt-4 text-sm leading-6 text-slate-300/85">Rahul Sharma • Placed at Google</p>
+            </div>
+
+            <div className="grid grid-cols-4 gap-3">
+              {COMPANY_LOGOS.map((logo, index) => (
+                <div
+                  key={index}
+                  className="group flex h-12 items-center justify-center rounded-3xl border border-slate-700/60 bg-slate-950/80 text-slate-400 transition hover:border-sky-400/40 hover:text-white hover:shadow-[0_14px_40px_rgba(14,165,233,0.12)]"
+                >
+                  <span className="text-xs uppercase tracking-[0.22em] font-semibold">{logo.name}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <div className="pointer-events-none absolute inset-0 opacity-70">
+          <motion.div
+            animate={{ y: [0, -14, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-16 left-16 h-60 w-60 rounded-full bg-sky-500/10 blur-3xl"
+          />
+          <motion.div
+            animate={{ x: [0, 28, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            className="absolute bottom-20 right-16 h-52 w-52 rounded-full bg-cyan-400/10 blur-3xl"
+          />
         </div>
       </div>
 
-      {/* ── Right form panel ── */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-950 relative overflow-hidden">
-        <div className="absolute inset-0 bg-dots opacity-40 dark:opacity-20" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl" />
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative z-10 w-full max-w-md"
-        >
-          {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-              <Sparkles size={16} className="text-white" />
-            </div>
-            <p className="font-black text-lg gradient-text">PlaceReady</p>
-          </div>
-
-          {/* Card */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-card border border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
-            {/* Blue top accent border */}
-            <div className="h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500" />
-
-            {/* Card header */}
-            <div className="px-8 pt-7 pb-5">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Welcome back 👋</h2>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Sign in to your PlaceReady account</p>
+      <div className="relative flex-1 flex items-center justify-center px-6 py-10 sm:px-10 sm:py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.16),_transparent_18%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.1),_transparent_22%)]" />
+        <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" />
+        <div className="relative z-10 w-full max-w-xl space-y-6">
+          <LoginCard>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-sky-300/80">Welcome back</p>
+                  <h2 className="mt-3 text-3xl font-black text-white">Sign in to continue your AI placement experience.</h2>
+                </div>
+                <div className="rounded-3xl bg-slate-900/75 px-3 py-2 text-xs uppercase tracking-[0.3em] text-sky-300/85">
+                  Secure access
+                </div>
+              </div>
+              <p className="text-sm leading-6 text-slate-300/85">
+                Access your dashboard, resume insights, and placement roadmap with a login experience designed for premium conversion.
+              </p>
             </div>
 
-            <div className="divider mx-8" />
-
-            {/* Form */}
-            <div className="px-8 py-6">
+            <div className="mt-8">
               <LoginForm />
             </div>
-          </div>
+          </LoginCard>
 
-          <p className="text-center text-xs text-slate-400 dark:text-slate-600 mt-5">
-            By signing in, you agree to our{' '}
-            <span className="text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">Terms</span> and{' '}
-            <span className="text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">Privacy Policy</span>
-          </p>
-        </motion.div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {FEATURES.slice(4).map((feature, index) => (
+              <FeatureItem key={index} icon={feature.icon} title={feature.title} small />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )

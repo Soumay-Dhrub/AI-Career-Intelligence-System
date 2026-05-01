@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Menu, Sun, Moon, ChevronDown, LogOut, User, Sparkles, Bell } from 'lucide-react'
+import { Menu, Sun, Moon, ChevronDown, LogOut, User, Sparkles, Edit, HelpCircle } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { useProfileStore } from '@/stores/profileStore'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useOnboardingStore } from '@/stores/onboardingStore'
+import { NotificationBell } from '@/components/ui/NotificationBell'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {
@@ -20,6 +23,7 @@ const PAGE_NAMES: Record<string, string> = {
   '/failure': 'Failure Analysis',
   '/roadmap-tool': 'Roadmap Generator',
   '/placement': 'Placement Predictor',
+  '/ai-chat': 'NextHire AI',
 }
 
 export function Navbar({ onToggleSidebar }: NavbarProps) {
@@ -28,8 +32,16 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
   const { theme, toggleTheme } = useTheme()
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
+  const profileImage = useProfileStore((s) => s.profile.profile_image_url)
+  const fetchProfile = useProfileStore((s) => s.fetchProfile)
+  const profileLoaded = useProfileStore((s) => !!s.profile.email || !!s.profile.name)
+  const openHelp = useOnboardingStore((s) => s.openHelp)
+  const openTour = useOnboardingStore((s) => s.openTour)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Only fetch if profile not yet loaded
+  useEffect(() => { if (user && !profileLoaded) fetchProfile() }, [user])
 
   const currentPage = PAGE_NAMES[location.pathname] ?? 'PlaceReady'
 
@@ -87,13 +99,16 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
 
       {/* Right actions */}
       <div className="flex items-center gap-1">
-        {/* Notification bell (decorative) */}
+        {/* Notification bell */}
+        <NotificationBell />
+
+        {/* Guidance help */}
         <button
-          className="p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition-all duration-200 relative"
-          aria-label="Notifications"
+          onClick={openHelp}
+          className="p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-300 transition-all duration-200"
+          aria-label="Open help"
         >
-          <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-blue-500 rounded-full" />
+          <HelpCircle size={18} />
         </button>
 
         {/* Theme toggle */}
@@ -117,8 +132,10 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
               dropdownOpen && 'bg-slate-100 dark:bg-slate-800'
             )}
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center shadow-sm shrink-0">
-              <span className="text-white text-xs font-bold">{initials}</span>
+            <div className="w-8 h-8 rounded-xl overflow-hidden bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center shadow-sm shrink-0">
+              {profileImage
+                ? <img src={profileImage} alt="avatar" className="w-full h-full object-cover" />
+                : <span className="text-white text-xs font-bold">{initials}</span>}
             </div>
             <div className="hidden sm:block text-left">
               <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight max-w-[100px] truncate">
@@ -136,8 +153,10 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
               {/* User info */}
               <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center shrink-0">
-                    <span className="text-white text-sm font-bold">{initials}</span>
+                  <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center shrink-0">
+                    {profileImage
+                      ? <img src={profileImage} alt="avatar" className="w-full h-full object-cover" />
+                      : <span className="text-white text-sm font-bold">{initials}</span>}
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{user?.name ?? 'User'}</p>
@@ -152,7 +171,19 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
                   onClick={() => { navigate('/profile'); setDropdownOpen(false) }}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  <User size={15} /> My Profile
+                  <User size={15} /> View Profile
+                </button>
+                <button
+                  onClick={() => { openTour(); setDropdownOpen(false) }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                  <Sparkles size={15} /> Start Tour
+                </button>
+                <button
+                  onClick={() => { navigate('/profile'); setDropdownOpen(false) }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                  <Edit size={15} /> Edit Profile
                 </button>
                 <div className="mx-4 my-1 h-px bg-slate-100 dark:bg-slate-800" />
                 <button
