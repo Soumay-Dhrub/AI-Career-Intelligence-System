@@ -4,6 +4,7 @@ import { FileText, Upload, Loader2, CheckCircle, XCircle, Lightbulb, Target, Lay
 import { api } from '@/services/api'
 import { useToast } from '@/contexts/ToastContext'
 import { useNotify } from '@/hooks/useNotify'
+import { GuidanceHint } from '@/components/guidance/GuidanceHint'
 import { cn } from '@/lib/utils'
 import type { ResumeResponse, ImprovementSuggestion } from '@/types/api'
 

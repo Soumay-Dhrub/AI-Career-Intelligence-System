@@ -4,6 +4,7 @@ import { Briefcase, Loader2, ChevronRight, ChevronLeft, Star, MapPin, TrendingUp
 import { api } from '@/services/api'
 import { useToast } from '@/contexts/ToastContext'
 import { useNotify } from '@/hooks/useNotify'
+import { GuidanceHint } from '@/components/guidance/GuidanceHint'
 import { cn } from '@/lib/utils'
 import type { ProfileAnalysisResponse, CompanyRecommendation, StudentProfile } from '@/types/api'
 
@@ -237,6 +238,11 @@ export function InternshipPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">AI-powered company recommendations and selection probability</p>
         </div>
       </div>
+
+      <GuidanceHint
+        title="Get stronger internship matches"
+        description="Learn how to improve your profile and application fit with help text while reviewing company recommendations."
+      />
 
       {step < 3 && <StepIndicator current={step} total={3} />}
 

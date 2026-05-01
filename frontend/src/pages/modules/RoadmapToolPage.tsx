@@ -8,6 +8,7 @@ import {
 import { api } from '@/services/api'
 import { useToast } from '@/contexts/ToastContext'
 import { useNotify } from '@/hooks/useNotify'
+import { GuidanceHint } from '@/components/guidance/GuidanceHint'
 import { cn } from '@/lib/utils'
 import type {
   IntelligentRoadmapResponse, RoadmapPhase, ProjectIdea,
@@ -199,6 +200,11 @@ export function RoadmapToolPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Personalized, industry-aligned learning roadmap with daily schedule</p>
         </div>
       </div>
+
+      <GuidanceHint
+        title="Build a realistic learning path"
+        description="Use guided help to see how each roadmap phase closes skill gaps and boosts your placement readiness."
+      />
 
       {!result && <StepIndicator current={step} total={STEPS.length} />}
 

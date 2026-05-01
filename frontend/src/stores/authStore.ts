@@ -1,14 +1,16 @@
 import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
+import { toastClient } from '@/contexts/ToastContext'
 import { setTokenGetter } from '@/services/api'
 import type { User, Session } from '@supabase/supabase-js'
 
 // Lazy import to avoid circular deps
 async function fireLoginNotification(name: string) {
   try {
+    toastClient.success('Login successful — Welcome to PlaceReady 🎉')
     const { pushNotification } = await import('@/stores/notificationStore')
     await pushNotification(
-      'Login successful 🎉',
+      'Login successful — Welcome to PlaceReady 🎉',
       `Welcome back to PlaceReady, ${name}!`,
       'login'
     )
@@ -16,6 +18,7 @@ async function fireLoginNotification(name: string) {
 }
 
 interface AuthUser {
+  id: string
   name: string
   email: string
 }
@@ -38,6 +41,7 @@ function sessionToUser(session: Session | null): { user: AuthUser | null; token:
   return {
     token: session.access_token,
     user: {
+      id: sbUser.id,
       email: sbUser.email ?? '',
       name:
         (sbUser.user_metadata?.full_name as string | undefined) ??

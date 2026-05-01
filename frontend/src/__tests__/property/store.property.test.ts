@@ -115,9 +115,10 @@ describe('Store property tests', () => {
         async (token, user, inLocal) => {
           // Set up state
           const storage = inLocal ? localStorage : sessionStorage
+          const mockUser = { id: 'test-user-id', ...user }
           storage.setItem(AUTH_TOKEN_KEY, token)
-          storage.setItem(AUTH_USER_KEY, JSON.stringify(user))
-          useAuthStore.setState({ user, token, isAuthenticated: true })
+          storage.setItem(AUTH_USER_KEY, JSON.stringify(mockUser))
+          useAuthStore.setState({ user: mockUser, token, isAuthenticated: true })
 
           await act(async () => {
             await useAuthStore.getState().logout()

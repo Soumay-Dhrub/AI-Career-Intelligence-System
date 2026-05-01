@@ -23,6 +23,16 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null)
 
+export const toastClient = {
+  success: (message: string) => {
+    // toast provider may not be mounted yet
+    console.warn('[Toast] toastClient called before provider mounted:', message)
+  },
+  error: (message: string) => {
+    console.warn('[Toast] toastClient called before provider mounted:', message)
+  },
+}
+
 let _counter = 0
 function nextId(): string {
   return `toast-${++_counter}`
@@ -53,6 +63,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (message: string) => addToast(message, 'error'),
     [addToast]
   )
+
+  React.useEffect(() => {
+    toastClient.success = success
+    toastClient.error = error
+  }, [success, error])
 
   return (
     <ToastContext.Provider value={{ toasts, success, error, dismiss }}>

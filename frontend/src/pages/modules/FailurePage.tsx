@@ -8,6 +8,7 @@ import {
 import { api } from '@/services/api'
 import { useToast } from '@/contexts/ToastContext'
 import { useNotify } from '@/hooks/useNotify'
+import { GuidanceHint } from '@/components/guidance/GuidanceHint'
 import { cn } from '@/lib/utils'
 import type {
   FailureIntelligenceResponse, DimensionScore, RootCause,
@@ -248,6 +249,11 @@ export function FailurePage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Diagnose why you're failing and get a personalized recovery plan</p>
         </div>
       </div>
+
+      <GuidanceHint
+        title="Need a recovery plan?"
+        description="Open the guided help to understand your failure drivers and how to improve your study strategy."
+      />
 
       {!result && <StepIndicator current={step} total={STEPS.length} />}
 
