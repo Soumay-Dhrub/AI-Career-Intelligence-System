@@ -9,7 +9,7 @@ Thank you for your interest in contributing! This document provides guidelines a
 ### Prerequisites
 
 - Python 3.11+
-- Node.js 18+
+- Node.js 20+
 - Git
 
 ### Setting Up Your Development Environment
@@ -27,7 +27,7 @@ Thank you for your interest in contributing! This document provides guidelines a
 
 3. **Set up the backend:**
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
