@@ -92,12 +92,19 @@ export function FloatingChat() {
       const res = await axiosInstance.post('/ai-chat', {
         messages: next.filter(m => m.id !== 'welcome').map(m => ({ role: m.role, content: m.content })),
         user_name: user?.name,
-      })
-      const aiMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: res.data.reply, timestamp: new Date() }
+      }, { timeout: 300000 })
+      const reply = res?.data?.reply ?? ''
+      if (!reply) {
+        throw new Error('No reply received from AI service')
+      }
+      const aiMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: reply, timestamp: new Date() }
       setMessages(prev => [...prev, aiMsg])
       if (!open) setUnread(u => u + 1)
     } catch (err: unknown) {
-      setError((err as { message?: string }).message ?? 'Failed to get response')
+      console.error('FloatingChat sendMessage error:', err)
+      const axiosErr = err as { response?: { data?: { detail?: string } }; message?: string }
+      const msg = axiosErr.response?.data?.detail ?? axiosErr.message ?? 'Failed to get response'
+      setError(msg)
     } finally {
       setLoading(false)
     }

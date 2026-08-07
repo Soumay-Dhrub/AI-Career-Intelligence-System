@@ -13,6 +13,7 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { AnalyticsPage } from '@/pages/AnalyticsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
 import { ProfilePage } from '@/pages/ProfilePage'
+import { AIChatPage } from '@/pages/AIChatPage'
 import { BurnoutPage } from '@/pages/modules/BurnoutPage'
 import { ResumePage } from '@/pages/modules/ResumePage'
 import { InternshipPage } from '@/pages/modules/InternshipPage'
@@ -158,6 +159,18 @@ export default function App() {
               <AppLayout>
                 <PageTransition>
                   <ProfilePage />
+                </PageTransition>
+              </AppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ai-chat"
+          element={
+            <PrivateRoute>
+              <AppLayout>
+                <PageTransition>
+                  <AIChatPage />
                 </PageTransition>
               </AppLayout>
             </PrivateRoute>

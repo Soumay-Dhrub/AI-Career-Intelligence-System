@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { HelpCircle, Sparkles, FileText, Briefcase, AlertTriangle, Navigation, Target, MessageSquare, ArrowRight } from 'lucide-react'
@@ -15,6 +15,19 @@ const MODULES = [
 export function GuidancePanel() {
   const { helpOpen, closeHelp, openTour } = useOnboardingStore()
 
+  useEffect(() => {
+    if (!helpOpen) return
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        closeHelp()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [helpOpen, closeHelp])
+
   return (
     <AnimatePresence>
       {helpOpen && (
@@ -23,6 +36,9 @@ export function GuidancePanel() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[90] bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={closeHelp}
+          role="dialog"
+          aria-modal="true"
         >
           <motion.div
             initial={{ y: 24, opacity: 0 }}
@@ -30,6 +46,7 @@ export function GuidancePanel() {
             exit={{ y: 24, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="w-full max-w-3xl rounded-[28px] bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden"
+            onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-4 p-6 border-b border-slate-200/80 dark:border-slate-800">
               <div className="flex items-center gap-3">

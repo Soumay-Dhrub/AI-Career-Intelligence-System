@@ -1,4 +1,9 @@
 {
+  "name": "AI-Career-Intelligence-System",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0"
   }

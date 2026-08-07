@@ -82,20 +82,30 @@ export function AIChatPage() {
     setLoading(true)
 
     try {
-      const res = await axiosInstance.post('/ai-chat', {
+      const requestBody = {
         messages: newMessages.filter(m => m.id !== 'welcome').map(m => ({ role: m.role, content: m.content })),
         user_name: user?.name,
-      })
+      }
+      console.debug('AIChatPage sendMessage request', { url: '/ai-chat', timeout: 300000, body: requestBody })
+      const res = await axiosInstance.post('/ai-chat', requestBody, { timeout: 300000 })
+      console.debug('AIChatPage sendMessage response', { status: res.status, data: res.data })
+      const reply = res?.data?.reply ?? ''
+      if (!reply) {
+        console.error('AIChatPage sendMessage no reply', { response: res?.data })
+        throw new Error('No reply received from AI service')
+      }
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: res.data.reply,
+        content: reply,
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, aiMsg])
     } catch (err: unknown) {
-      const msg = (err as { message?: string }).message ?? 'Failed to get response'
-      setError(msg)
+      console.error('AIChatPage sendMessage error:', err)
+      const axiosErr = err as { response?: { status?: number; data?: { detail?: string } }; message?: string }
+      const msg = axiosErr.response?.data?.detail ?? axiosErr.message ?? 'Failed to get response'
+      setError(`${msg} (check console for debug info)`)
     } finally {
       setLoading(false)
       inputRef.current?.focus()
