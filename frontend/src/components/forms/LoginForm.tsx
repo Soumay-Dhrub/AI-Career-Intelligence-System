@@ -150,12 +150,9 @@ export function LoginForm() {
               <input
                 type="email"
                 autoComplete="email"
-                {...register('email', {
-                  onFocus: () => setFocusedField('email'),
-                  onBlur: () => setFocusedField(null),
-                })}
-                aria-invalid={errors.email ? 'true' : 'false'}
-                aria-describedby={errors.email ? 'email-error' : undefined}
+                {...register('email')}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField(null)}
                 className={cn(
                   'w-full relative z-10 bg-white/5 border-2 rounded-2xl px-5 py-4 pr-12',
                   'text-white placeholder-indigo-300/50 font-medium',
@@ -236,12 +233,9 @@ export function LoginForm() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
-                {...register('password', {
-                  onFocus: () => setFocusedField('password'),
-                  onBlur: () => setFocusedField(null),
-                })}
-                aria-invalid={errors.password ? 'true' : 'false'}
-                aria-describedby={errors.password ? 'password-error' : undefined}
+                {...register('password')}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
                 className={cn(
                   'w-full relative z-10 bg-white/5 border-2 rounded-2xl px-5 py-4 pr-12',
                   'text-white placeholder-indigo-300/50 font-medium',
