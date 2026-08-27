@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { cn } from '@/lib/utils'
+import { playUiSound } from '@/lib/uiSounds'
 
 interface SidebarProps { collapsed: boolean }
 
@@ -40,6 +41,9 @@ function NavItem({ to, label, icon: Icon, collapsed, emoji, color }: {
   return (
     <NavLink
       to={to}
+      onClick={() => {
+        if (!isActive) playUiSound('navigation')
+      }}
       title={collapsed ? label : undefined}
       className={cn(
         'relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group',

@@ -16,6 +16,7 @@ import { AnalyzeModal } from '@/components/forms/AnalyzeModal'
 import { useAuthStore } from '@/stores/authStore'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { cn, formatPercent, getRiskBgColor } from '@/lib/utils'
+import { playUiSound } from '@/lib/uiSounds'
 import { DEMO_REPORT } from '@/lib/demoData'
 import type { PlacementReport } from '@/types/api'
 
@@ -147,7 +148,10 @@ function ModuleCard({ mod, report, index }: { mod: typeof MODULES[0]; report: Pl
   return (
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * index }}
       whileHover={{ y: -3, transition: { duration: 0.15 } }}
-      onClick={() => navigate(mod.href)}
+      onClick={() => {
+        playUiSound('navigation')
+        navigate(mod.href)
+      }}
       className={cn('group rounded-2xl border p-4 cursor-pointer transition-all duration-200', mod.border, mod.bg,
         'hover:shadow-md hover:ring-2', mod.ring)}>
       <div className="flex items-start justify-between mb-3">
@@ -575,7 +579,7 @@ export function DashboardPage() {
                     {displayReport.roadmap.length === 0 ? (
                       <div className="text-center py-6">
                         <p className="text-sm text-slate-400">Run analysis to generate your roadmap</p>
-                        <button onClick={() => navigate('/roadmap-tool')}
+                        <button onClick={() => { playUiSound('navigation'); navigate('/roadmap-tool') }}
                           className="mt-3 text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium">
                           Open Roadmap Generator →
                         </button>
@@ -595,7 +599,7 @@ export function DashboardPage() {
                             )}
                           </div>
                         ))}
-                        <button onClick={() => navigate('/roadmap-tool')}
+                        <button onClick={() => { playUiSound('navigation'); navigate('/roadmap-tool') }}
                           className="w-full mt-2 py-2 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
                           View Full Roadmap →
                         </button>
@@ -677,7 +681,7 @@ export function DashboardPage() {
                  displayReport.burnout_risk === 'Medium' ? 'Consider adding more breaks between study sessions.' :
                  'High burnout risk. Reduce intensity and rest more.'}
               </p>
-              <button onClick={() => navigate('/burnout')}
+              <button onClick={() => { playUiSound('navigation'); navigate('/burnout') }}
                 className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1">
                 Analyze Burnout <ArrowRight size={11} />
               </button>
@@ -696,7 +700,7 @@ export function DashboardPage() {
                   { label: 'Generate Roadmap', icon: '🗺️', href: '/roadmap-tool', color: 'text-teal-600 dark:text-teal-400' },
                   { label: 'Predict Placement', icon: '🎯', href: '/placement', color: 'text-blue-600 dark:text-blue-400' },
                 ].map(action => (
-                  <button key={action.href} onClick={() => navigate(action.href)}
+                  <button key={action.href} onClick={() => { playUiSound('navigation'); navigate(action.href) }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group">
                     <span className="text-base">{action.icon}</span>
                     <span className={cn('text-sm font-medium group-hover:underline', action.color)}>{action.label}</span>
