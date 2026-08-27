@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
 import { toastClient } from '@/contexts/ToastContext'
 import { setTokenGetter } from '@/services/api'
+import { playUiSound } from '@/lib/uiSounds'
 import type { User, Session } from '@supabase/supabase-js'
 
 // Lazy import to avoid circular deps
@@ -68,6 +69,7 @@ export const useAuthStore = create<AuthState>()((set) => {
       if (error) throw { message: error.message }
       const { user, token } = sessionToUser(data.session)
       set({ user, token, isAuthenticated: true })
+      playUiSound('login')
       // Fire login notification (non-blocking)
       if (user) fireLoginNotification(user.name)
     },
@@ -92,6 +94,7 @@ export const useAuthStore = create<AuthState>()((set) => {
     },
 
     logout: async () => {
+      playUiSound('logout')
       await supabase.auth.signOut()
       set({ user: null, token: null, isAuthenticated: false })
     },
