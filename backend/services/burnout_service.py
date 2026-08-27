@@ -90,7 +90,7 @@ def _compute_features(hours: np.ndarray) -> dict:
     min_h = float(np.min(hours))
 
     # Coefficient of variation → consistency
-    cv = std_h / mean_h if mean_h > 0 else 0.0
+    cv = std_h / mean_h if mean_h > 0 else 1.0
     consistency_score = float(np.clip(1.0 - cv, 0.0, 1.0))
 
     # Trend: is workload increasing over time?

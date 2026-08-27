@@ -102,7 +102,9 @@ class ResumeService:
         experience_result = _experience_score(resume, jd, role_data)
 
         # ── 5. Skill gap analysis ─────────────────────────────────────────────
-        role_skills = role_data["required_skills"] if role_data else _SKILLS_VOCAB
+        role_skills = role_data["required_skills"] if role_data else [
+            skill for skill in _SKILLS_VOCAB if _skill_present(skill, jd.lower())
+        ]
         resume_lower = resume.lower()
         matched_skills = [s for s in role_skills if _skill_present(s, resume_lower)]
         missing_skills = [s for s in role_skills if not _skill_present(s, resume_lower)]
@@ -413,7 +415,7 @@ def _detect_role(jd: str) -> dict | None:
     }
     jd_lower = jd.lower()
     for role_key, hints in role_hints.items():
-        if any(h in jd_lower for h in hints):
+        if any(re.search(r"\b" + re.escape(h) + r"\b", jd_lower) for h in hints):
             return get_role(role_key)
     return None
 

@@ -23,11 +23,11 @@ logger = get_logger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # ── Security config ───────────────────────────────────────────────────────────
-SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("SECRET_KEY", "placement-readiness-secret-key-change-in-prod")
+SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("SECRET_KEY", "")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "252249856920-lre0t9rlm51rmabu0p5hri47mmgsbenc.apps.googleusercontent.com")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -67,6 +67,11 @@ def _verify_password(plain: str, hashed: str) -> bool:
 
 
 def _create_token(data: dict[str, Any]) -> str:
+    if not SECRET_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Authentication is not configured on the server.",
+        )
     payload = data.copy()
     payload["exp"] = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -74,6 +79,11 @@ def _create_token(data: dict[str, Any]) -> str:
 
 async def _verify_google_token(credential: str) -> dict[str, str]:
     """Verify a Google ID token and return the user info payload."""
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Google authentication is not configured on the server.",
+        )
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
             resp = await client.get(

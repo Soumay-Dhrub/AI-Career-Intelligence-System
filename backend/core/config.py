@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     SKILLS_VOCAB_PATH: Path = Path("data/skills_vocab.json")
 
     # Auth (optional — used by auth route directly via os.getenv)
-    SECRET_KEY: str = "change-me-in-production"
+    SECRET_KEY: str = ""
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
