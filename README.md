@@ -11,7 +11,7 @@ A polished, full-stack platform that helps students improve job placement readin
 - Secure authentication, API design, and frontend state management for real application workflows.
 - Strong developer experience with clear documentation, modular architecture, and reusable components.
 
-## Recruiter highlights
+## Highlights
 
 - **User-focused product**: Builds data-driven guidance that students can act on immediately.
 - **Technical breadth**: Covers backend API design, frontend UX, ML model integration, and deployment-ready structure.
